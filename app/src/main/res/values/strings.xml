@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">MoneyMinds</string>
+    <string name="transacciones">Transacciones</string>
+    <string name="informes">Informes</string>
+    <string name="categorias">Categorias</string>
+    <string name="fecha">Fecha</string>
+    <string name="ajustes">Ajustes</string>
+    <string name="action_set">action set</string>
+    <string name="saldo_total">Saldo Total</string>
+    <string name="saldo_var">$0.00</string>
+    <string name="todo">TODO</string>
+    <string name="ingresos">Ingresos</string>
+    <string name="gastos">Gastos</string>
+    <string name="periodo">Periodo</string>
+    <string name="balance">Balance</string>
+    <string name="gastos_por_categorias">Gastos por Categorias</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="money_minds">Money Minds</string>
+    <string name="categorias_por_ingresos">Ingresos por Categorias</string>
+    <string name="agregar_gasto">Agregar Gasto</string>
+    <string name="agregar_ingreso">Agregar Ingreso</string>
+    <string name="agregar">Agregar</string>
+    <string name="ok">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="categoria">Categoria</string>
+    <string name="cantidad">Cantidad</string>
+    <string name="agregar_categoria">Agregar Categoria</string>
+    <string name="nombre_categoria">Nombre Categoria</string>
+    <string name="toastIngresoText">Ingreso Agregado con exito</string>
+    <string name="toastGastoText">Gasto Agregado con exito</string>
+</resources>

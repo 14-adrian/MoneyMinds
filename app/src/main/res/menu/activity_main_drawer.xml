@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+
+
+    <item android:title="Communicate">
+        <menu>
+            <item android:id="@+id/add"
+
+                android:icon="@android:drawable/ic_menu_add"
+                android:title="@string/fecha"
+                android:orderInCategory="1"
+                />
+            <item android:id="@+id/search"
+                android:icon="@android:drawable/ic_menu_preferences"
+                android:title="@string/ajustes"
+                android:orderInCategory="2"
+                />
+        </menu>
+    </item>
+
+</menu>

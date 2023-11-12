@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/categoria"
+        android:paddingLeft="10dp"/>
+    <Spinner
+        android:id="@+id/lstCat"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:inputType="none"
+        app:simpleItems="@array/cat_ingresos"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:helperText="* required"
+        app:startIconDrawable="@drawable/baseline_attach_money_24"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="@string/cantidad" />
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>
