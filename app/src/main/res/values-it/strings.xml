@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MoneyMinds</string>
+
+    <string name="transacciones">Transazioni</string>
+    <string name="informes">Rapporti</string>
+
+    <string name="categorias">Categorie</string>
+
+    <string name="fecha">Data</string>
+    <string name="ajustes">Impostazioni</string>
+    <string name="action_set">Insieme di azioni</string>
+    <string name="saldo_total">Saldo totale</string>
+    <string name="saldo_var">$0.00</string>
+    <string name="todo">TUTTO</string>
+    <string name="ingresos">Reddito</string>
+    <string name="gastos">Spese</string>
+    <string name="periodo">Periodo</string>
+    <string name="balance">Bilancia</string>
+    <string name="gastos_por_categorias">Spese per categorie</string>
+
+    <string name="hello_blank_fragment">Ciao frammento vuoto</string>
+    <string name="money_minds">Money Minds</string>
+    <string name="categorias_por_ingresos">Reddito per categoria</string>
+    <string name="agregar_gasto">Aggiungi Spesa</string>
+    <string name="agregar_ingreso">Aggiungi reddito</string>
+
+    <string name="agregar">aggiungere</string>
+
+    <string name="ok">Accettare</string>
+    <string name="cancel">Annulla</string>
+    <string name="categoria">Categoria</string>
+    <string name="cantidad">Quantità</string>
+
+    <string name="agregar_categoria">Aggiungi categoria</string>
+
+    <string name="nombre_categoria">Categoria nome</string>
+    <string name="toastIngresoText">Reddito aggiunto di successo</string>
+    <string name="toastGastoText">Spesa aggiunta con successo</string>
+
+    <string name="eliminar_gasto">Elimina spesa</string>
+
+    <string name="eliminar">Eliminare</string>
+    <string name="elim_gas_succes">La spesa è stata rimossa con successo</string>
+
+    <string name="elim_gas_failed">Impossibile eliminare la spesa</string>
+    <string name="categoria_elim_set">Categoria:</string>
+    <string name="cantidad_elim_set">Quantità:</string>
+    <string name="fecha_elim_set">Data:</string>
+    <string name="ingreso_elim_succes">Il reddito è stato eliminato con successo</string>
+    <string name="cat_elim_succes">La categoria è stata eliminata con successo</string>
+    <string name="cat_elim_failed">La categoria non può essere eliminata!</string>
+    <string name="title_activity_ajustes">Impostazioni</string>
+    <string name="first_fragment_label">Primo Frammento</string>
+    <string name="second_fragment_label">Secondo frammento</string>
+    <string name="next">Prossima</string>
+    <string name="previous">Precedente</string>
+    <string name="lorem_ipsum">.</string>
+    <string name="eliminar_datos">Elimina Dati</string>
+    <string name="FAQ">Money Minds © - Versione 1.0</string>
+    <string name="regresar">Torna indietro</string>
+
+    <string name="warning_text">I dati cancellati non possono essere recuperati! Vuoi eliminare i dati?</string>
+    <string name="warning">Avvertimento</string>
+    <string name="aceptar">Accettare</string>
+    <string name="cleardata_success">I dati sono stati cancellati!</string>
+    <string name="cat_add_success">Categoria aggiunta con successo</string>
+
+    <string name="data_cat_ingreso">Stipendio: predefinito</string>
+
+    <string name="data_cat_ingreso2">Regalo: predefinito</string>
+    <string name="data_cat_gasto">Cibo: impostazione predefinita</string>
+    <string name="data_cat_gasto2">Regalo: predefinito</string>
+    <string name="cat_add_in">Stipendio</string>
+    <string name="cat_add_in2">Regalo</string>
+    <string name="cad_add_gas">Cibo</string>
+    <string name="cat_add_gas2">Regalo</string>
+    <string name="eliminar_ingreso">Elimina voce</string>
+    <string name="moneda">$</string>
+    <string name="add_cat_error">Si è verificato un errore durante l\'immissione dei dati</string>
+    <string name="eliminar_categorias">Elimina categorie</string>
+</resources>
