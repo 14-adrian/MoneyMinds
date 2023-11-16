@@ -43,7 +43,7 @@ public class ListViewInfo extends ArrayAdapter<String> {
         imageView.setImageResource(imgid);
         imageView.setColorFilter(idD.get(position));
 
-        subtitleText.setText(subtitle.get(position)+"$");
+        subtitleText.setText(subtitle.get(position)+context.getString(R.string.moneda));
 
         return rowView;
 

@@ -128,20 +128,31 @@ public class NotificationsFragment extends Fragment {
                                 AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
                                 SQLiteDatabase bd = admin.getWritableDatabase();
                                 String nombre = txtNombre.getText().toString();
-                                ContentValues registro = new ContentValues();
-                                registro.put("nombre", nombre);
-                                bd.insert("CatIngresos", null, registro);
-                                bd.close();
-                                defSize();
-                                refrescar();
-                                Toast.makeText(getActivity(), "Categoria Agregada con exito",
-                                        Toast.LENGTH_LONG).show();
+                                if(nombre.isEmpty()){
+                                    Toast.makeText(getActivity(), R.string.add_cat_error ,
+                                            Toast.LENGTH_LONG).show();
+                                    bd.close();
+                                    defSize();
+                                    refrescar();
+                                }
+                                else {
+                                    ContentValues registro = new ContentValues();
+                                    registro.put("nombre", nombre);
+                                    bd.insert("CatIngresos", null, registro);
+                                    bd.close();
+                                    defSize();
+                                    refrescar();
+                                    Toast.makeText(getActivity(), R.string.cat_add_success,
+                                            Toast.LENGTH_LONG).show();
+                                }
+
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                             }
                         });
+                builder.setCancelable(false);
                 builder.create();
                 builder.show();
             }
@@ -157,6 +168,7 @@ public class NotificationsFragment extends Fragment {
                 // Inflate and set the layout for the dialog
                 // Pass null as the parent view because its going in the dialog layout
                 builder.setTitle(R.string.agregar_gasto);
+
                 builder.setView(customV)
                         // Add action buttons
                         .setPositiveButton(R.string.agregar, new DialogInterface.OnClickListener() {
@@ -165,21 +177,32 @@ public class NotificationsFragment extends Fragment {
                                 AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
                                 SQLiteDatabase bd = admin.getWritableDatabase();
                                 String nombre = txtNombre.getText().toString();
-                                ContentValues registro = new ContentValues();
-                                registro.put("nombre", nombre);
-                                bd.insert("CatGastos", null, registro);
-                                bd.close();
-                                defSize();
-                                refrescar();
+                                if(nombre.isEmpty()){
+                                    Toast.makeText(getActivity(), R.string.add_cat_error ,
+                                            Toast.LENGTH_LONG).show();
+                                    bd.close();
+                                    defSize();
+                                    refrescar();
+                                }
+                                else {
+                                    ContentValues registro = new ContentValues();
+                                    registro.put("nombre", nombre);
+                                    bd.insert("CatGastos", null, registro);
+                                    bd.close();
+                                    defSize();
+                                    refrescar();
 
-                                Toast.makeText(getActivity(), "Categoria Agregada con exito",
-                                        Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), R.string.cat_add_success,
+                                            Toast.LENGTH_LONG).show();
+                                }
+
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                             }
                         });
+                builder.setCancelable(false);
                 builder.create();
                 builder.show();
             }
@@ -221,8 +244,8 @@ public class NotificationsFragment extends Fragment {
         viewPager.setLayoutParams(paramsM);
     }
     private void setUpViewPagerAdapter(){
-        viewPagerAdapter.addFragment(new catGastos(), "Gastos");
-        viewPagerAdapter.addFragment(new catIngresos(), "Ingresos");
+        viewPagerAdapter.addFragment(new catGastos(), getString(R.string.gastos));
+        viewPagerAdapter.addFragment(new catIngresos(), getString(R.string.ingresos));
         viewPager.setAdapter(viewPagerAdapter);
         defSize();
 
@@ -233,10 +256,10 @@ public class NotificationsFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        Log.d("TAG1", "Posicion: " + tabLayout.getSelectedTabPosition() + " Titulo: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
+                        Log.d("TAG1", "Pos: " + tabLayout.getSelectedTabPosition() + " T: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
                         break;
                     case 1:
-                        Log.d("TAG1", "Posicion: " + tabLayout.getSelectedTabPosition() + " Titulo: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
+                        Log.d("TAG1", "Pos: " + tabLayout.getSelectedTabPosition() + " T: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
                         break;
                     default:
                         break;

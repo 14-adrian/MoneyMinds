@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MyListView extends ArrayAdapter<String> {
+public class MyListView extends ArrayAdapter<Integer> {
 
     private final Activity context;
     private final List<String> maintitle;
@@ -20,7 +20,7 @@ public class MyListView extends ArrayAdapter<String> {
     private final List<Integer> idD;
 
     public MyListView(Activity context, List<Integer> idD,List<String> maintitle,List<String> subtitle, Integer imgid) {
-        super(context, R.layout.mylist, maintitle);
+        super(context, R.layout.mylist, idD);
         // TODO Auto-generated constructor stub
 
         this.context=context;

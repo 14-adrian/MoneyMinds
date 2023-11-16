@@ -3,6 +3,7 @@ package sv.edu.universidad.moneyminds.ui.Transacciones;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,15 +13,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -44,6 +48,7 @@ public class TranFragment extends Fragment {
     private FragmentHomeBinding binding;
     FloatingActionButton mAddGas, mAddIng;
     ExtendedFloatingActionButton mAdd;
+    LinearLayout layL;
 
     TextView addGasActionText, addIngActionText, txtDate, txtDate2, txtTotal, txtTotalPer, txtIngreso, txtGasto;
 
@@ -57,6 +62,8 @@ public class TranFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        layL = binding.linearLHome;
 
         mAdd = binding.snAdd;
         // FAB button
@@ -125,34 +132,13 @@ public class TranFragment extends Fragment {
                             addGasActionText.setVisibility(View.VISIBLE);
                             addIngActionText.setVisibility(View.VISIBLE);
 
-                            // Now extend the parent FAB, as
-                            // user clicks on the shrinked
-                            // parent FAB
                             mAdd.extend();
 
-                            // make the boolean variable true as
-                            // we have set the sub FABs
-                            // visibility to GONE
                             isAllFabsVisible = true;
 
                         } else {
 
-                            // when isAllFabsVisible becomes
-                            // true make all the action name
-                            // texts and FABs GONE.
-                            mAddGas.hide();
-                            mAddIng.hide();
-                            addGasActionText.setVisibility(View.GONE);
-                            addIngActionText.setVisibility(View.GONE);
-
-                            // Set the FAB to shrink after user
-                            // closes all the sub FABs
-                            mAdd.shrink();
-
-                            // make the boolean variable false
-                            // as we have set the sub FABs
-                            // visibility to GONE
-                            isAllFabsVisible = false;
+                            closeFAB();
                         }
                     }
                 });
@@ -163,7 +149,7 @@ public class TranFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
-                // Get the layout inflater
+
                 LayoutInflater inflater = requireActivity().getLayoutInflater();
 
                 //-------Spinner Categorias---------------
@@ -174,8 +160,8 @@ public class TranFragment extends Fragment {
                 Spinner dropdown = customV.findViewById(R.id.lstCat);
                 EditText cantidad = customV.findViewById(R.id.edCantidad);
                 List<String> datos = new ArrayList<String>();
-                datos.add("Salario");
-                datos.add("Regalo");
+                datos.add(getString(R.string.cat_add_in));
+                datos.add(getString(R.string.cat_add_in2));
                 while (fila.moveToNext())
                 {
                     datos.add(fila.getString(0));
@@ -190,24 +176,38 @@ public class TranFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
                                 SQLiteDatabase bd = admin.getWritableDatabase();
+                                String s_cant = cantidad.getText().toString();
                                 String categoria = dropdown.getSelectedItem().toString();
-                                Double cant = Double.valueOf(cantidad.getText().toString());
                                 String tdate = ((Datos) getActivity().getApplication()).getValDate();
-                                ContentValues registro = new ContentValues();
-                                registro.put("categoria", categoria);
-                                registro.put("cantidad", cant);
-                                registro.put("fecha", tdate);
-                                bd.insert("Ingresos", null, registro);
-                                bd.close();
-                                actualizarTotal();
-                                Toast.makeText(getActivity(), R.string.toastIngresoText,
-                                        Toast.LENGTH_SHORT).show();
+                                if(s_cant.isEmpty()){
+                                    Toast.makeText(getActivity(), R.string.add_cat_error ,
+                                            Toast.LENGTH_LONG).show();
+                                    bd.close();
+                                    actualizarTotal();
+                                    closeFAB();
+                                }
+                                else{
+                                    Double cant = Double.valueOf(s_cant);
+                                    ContentValues registro = new ContentValues();
+                                    registro.put("categoria", categoria);
+                                    registro.put("cantidad", cant);
+                                    registro.put("fecha", tdate);
+                                    bd.insert("Ingresos", null, registro);
+                                    bd.close();
+                                    actualizarTotal();
+                                    Toast.makeText(getActivity(), R.string.toastIngresoText,
+                                            Toast.LENGTH_SHORT).show();
+                                    closeFAB();
+                                }
+
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                closeFAB();
                             }
                         });
+                builder.setCancelable(false);
                 builder.create();
                 builder.show();
             }
@@ -230,8 +230,8 @@ public class TranFragment extends Fragment {
                 Spinner dropdown = customV.findViewById(R.id.lstCat);
                 List<String> datos = new ArrayList<String>();
                 EditText cantidad = customV.findViewById(R.id.edCantidad);
-                datos.add("Alimentos");
-                datos.add("Regalo");
+                datos.add(getString(R.string.cad_add_gas));
+                datos.add(getString(R.string.cat_add_gas2));
                 while (fila.moveToNext())
                 {
                     datos.add(fila.getString(0));
@@ -249,26 +249,160 @@ public class TranFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
                                 SQLiteDatabase bd = admin.getWritableDatabase();
+                                String s_cant = cantidad.getText().toString();
                                 String categoria = dropdown.getSelectedItem().toString();
-                                Double cant = Double.valueOf(cantidad.getText().toString());
+
                                 String tdate = ((Datos) getActivity().getApplication()).getValDate();
-                                ContentValues registro = new ContentValues();
-                                registro.put("categoria", categoria);
-                                registro.put("cantidad", cant);
-                                registro.put("fecha", tdate);
-                                bd.insert("Gastos", null, registro);
-                                bd.close();
-                                actualizarTotal();
-                                Toast.makeText(getActivity(), R.string.toastGastoText ,
-                                        Toast.LENGTH_SHORT).show();
+                                if (s_cant.isEmpty()){
+                                    Toast.makeText(getActivity(), R.string.add_cat_error ,
+                                            Toast.LENGTH_LONG).show();
+                                    bd.close();
+                                    actualizarTotal();
+                                    closeFAB();
+                                }else {
+                                    Double cant = Double.valueOf(s_cant);
+                                    ContentValues registro = new ContentValues();
+                                    registro.put("categoria", categoria);
+                                    registro.put("cantidad", cant);
+                                    registro.put("fecha", tdate);
+                                    bd.insert("Gastos", null, registro);
+                                    bd.close();
+                                    actualizarTotal();
+                                    Toast.makeText(getActivity(), R.string.toastGastoText ,
+                                            Toast.LENGTH_SHORT).show();
+                                    closeFAB();
+                                }
+
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                closeFAB();
                             }
                         });
+                builder.setCancelable(false);
                 builder.create();
                 builder.show();
+            }
+        });
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                int t_id = (int) lista.getAdapter().getItem(pos);
+                String t_Cat = getString(R.string.categoria_elim_set), t_Cant = getString(R.string.cantidad_elim_set), t_fec = getString(R.string.fecha_elim_set);
+                String d_Cat = "", d_Cant = "", d_fec;
+                AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
+                SQLiteDatabase bd = admin.getWritableDatabase();
+                int mMonth = ((Datos) getActivity().getApplication()).getMonth();
+                int mYear = ((Datos) getActivity().getApplication()).getYear();
+                Cursor filaPerG = bd.rawQuery("SELECT categoria, cantidad, fecha " +
+                        "FROM Gastos " +
+                        "WHERE strftime('%m', fecha) = '"+mMonth+"'" +
+                        " AND strftime('%Y', fecha) = '"+mYear+"'" +
+                        " AND id = " + t_id + "",null);
+                if(filaPerG.moveToFirst())
+                //while(fila.moveToNext())
+                {
+                    d_Cat = filaPerG.getString(0);
+                    d_Cant = filaPerG.getString(1);
+                    d_fec = filaPerG.getString(2);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+                    // Get the layout inflater
+                    LayoutInflater inflater = requireActivity().getLayoutInflater();
+                    final View  customV = inflater.inflate(R.layout.dialog_elim, null);
+                    TextView v_cat = customV.findViewById(R.id.catElim);
+                    TextView v_cant = customV.findViewById(R.id.cantElim);
+                    TextView v_fec = customV.findViewById(R.id.fecElim);
+
+                    v_cat.setText(t_Cat+d_Cat);
+                    v_cant.setText(t_Cant+d_Cant+"$");
+                    v_fec.setText(t_fec+d_fec);
+
+                    builder.setTitle(R.string.eliminar_gasto);
+                    builder.setView(customV)
+                            .setPositiveButton(R.string.eliminar , new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                AdminDB admin1 = new AdminDB(getActivity(), "DBmoney", null, 1);
+                                SQLiteDatabase bde = admin1.getWritableDatabase();
+                                int cant = bde.delete("Gastos", "id = "+t_id+"", null);
+                                bde.close();
+                                actualizarTotal();
+                                Toast.makeText(getActivity() , R.string.elim_gas_succes ,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    bd.close();
+                    builder.setCancelable(false);
+                    builder.create();
+                    builder.show();
+                }
+                else {};
+                bd.close();
+            }
+        });
+        lista2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                int t_id = (int) lista2.getAdapter().getItem(pos);
+                String t_Cat = getString(R.string.categoria_elim_set), t_Cant = getString(R.string.cantidad_elim_set), t_fec = getString(R.string.fecha_elim_set);
+                String d_Cat = "", d_Cant = "", d_fec;
+                AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
+                SQLiteDatabase bd = admin.getWritableDatabase();
+                int mMonth = ((Datos) getActivity().getApplication()).getMonth();
+                int mYear = ((Datos) getActivity().getApplication()).getYear();
+                Cursor filaPerG = bd.rawQuery("SELECT categoria, cantidad, fecha " +
+                        "FROM Ingresos " +
+                        "WHERE strftime('%m', fecha) = '"+mMonth+"'" +
+                        " AND strftime('%Y', fecha) = '"+mYear+"'" +
+                        " AND id = " + t_id + "",null);
+                if(filaPerG.moveToFirst())
+                //while(fila.moveToNext())
+                {
+                    d_Cat = filaPerG.getString(0);
+                    d_Cant = filaPerG.getString(1);
+                    d_fec = filaPerG.getString(2);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+                    // Get the layout inflater
+                    LayoutInflater inflater = requireActivity().getLayoutInflater();
+                    final View  customV = inflater.inflate(R.layout.dialog_elim, null);
+                    TextView v_cat = customV.findViewById(R.id.catElim);
+                    TextView v_cant = customV.findViewById(R.id.cantElim);
+                    TextView v_fec = customV.findViewById(R.id.fecElim);
+
+                    v_cat.setText(t_Cat+d_Cat);
+                    v_cant.setText(t_Cant+d_Cant+"$");
+                    v_fec.setText(t_fec+d_fec);
+
+                    builder.setTitle(R.string.eliminar_ingreso);
+                    builder.setView(customV)
+                            .setPositiveButton(R.string.eliminar , new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    AdminDB admin1 = new AdminDB(getActivity(), "DBmoney", null, 1);
+                                    SQLiteDatabase bde = admin1.getWritableDatabase();
+                                    int cant = bde.delete("Ingresos", "id = "+t_id+"", null);
+                                    bde.close();
+                                    actualizarTotal();
+                                    Toast.makeText(getActivity() , R.string.ingreso_elim_succes ,
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    bd.close();
+                    builder.setCancelable(false);
+                    builder.create();
+                    builder.show();
+                }
+                else {};
+                bd.close();
             }
         });
 
@@ -333,10 +467,10 @@ public class TranFragment extends Fragment {
         Double ingresos = ((Datos) getActivity().getApplication()).getIngresos();
         Double gastos = ((Datos) getActivity().getApplication()).getGastos();
         Double totalPer = ingresos - gastos;
-        txtTotal.setText(String.format("%.2f", total)+"$");
-        txtTotalPer.setText(String.format("%.2f", totalPer)+"$");
-        txtIngreso.setText(String.format("%.2f", ingresos)+"$");
-        txtGasto.setText(String.format("%.2f", gastos)+"$");
+        txtTotal.setText(String.format("%.2f", total)+getString(R.string.moneda));
+        txtTotalPer.setText(String.format("%.2f", totalPer)+getString(R.string.moneda));
+        txtIngreso.setText(String.format("%.2f", ingresos)+getString(R.string.moneda));
+        txtGasto.setText(String.format("%.2f", gastos)+getString(R.string.moneda));
 
         //------------------Asignar Fecha------------------
         today = ((Datos) getActivity().getApplication()).getToday();
@@ -368,7 +502,7 @@ public class TranFragment extends Fragment {
         while (filaPerG.moveToNext())
         {
             idG.add(Integer.parseInt(filaPerG.getString(0)));
-            cantidad.add(filaPerG.getString(1)+"$");
+            cantidad.add(filaPerG.getString(1)+getString(R.string.moneda));
             faCG.add(filaPerG.getString(2)+" | " + filaPerG.getString(3));
 
         }
@@ -394,19 +528,40 @@ public class TranFragment extends Fragment {
         while (filaPerI.moveToNext())
         {
             idI.add(Integer.parseInt(filaPerI.getString(0)));
-            cantidadI.add(filaPerI.getString(1)+"$");
+            cantidadI.add(filaPerI.getString(1)+getString(R.string.moneda));
             faCI.add(filaPerI.getString(2)+" | " + filaPerI.getString(3));
 
         }
         MyListView adapter2=new MyListView(getActivity(), idI, cantidadI, faCI, R.drawable.baseline_arrow_upward_24);
 
-        int itemcount2 = adapter.getCount();
+        int itemcount2 = adapter2.getCount();
         ViewGroup.LayoutParams params2 = lista2.getLayoutParams();
         int dps2 =(itemcount2*70);
+        int dpsL = (dps2+dps+400);
         int pixels2 = (int) (dps2 * scale + 0.5f);
+        int pixelsL = (int) (dpsL * scale + 0.5f);
+        ViewGroup.LayoutParams paramsL = layL.getLayoutParams();
+
         params2.height =pixels2;
+        paramsL.height = pixelsL;
+        layL.setLayoutParams(paramsL);
         lista2.setLayoutParams(params2);
         lista2.setAdapter(adapter2);
+    }
+    private void closeFAB(){
+        mAddGas.hide();
+        mAddIng.hide();
+        addGasActionText.setVisibility(View.GONE);
+        addIngActionText.setVisibility(View.GONE);
+
+        // Set the FAB to shrink after user
+        // closes all the sub FABs
+        mAdd.shrink();
+
+        // make the boolean variable false
+        // as we have set the sub FABs
+        // visibility to GONE
+        isAllFabsVisible = false;
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -446,9 +601,18 @@ public class TranFragment extends Fragment {
         }
         else if(item.getItemId() == R.id.nav_settings)
         {
-
+            Intent oVentana = new Intent(getActivity(), Ajustes.class);
+            oVentana.putExtra("Action", "Conf");
+            startActivityForResult(oVentana, 777);
         }
         else return super.onOptionsItemSelected(item);
         return true;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        actualizarTotal();
+        generarLista();
+
     }
 }

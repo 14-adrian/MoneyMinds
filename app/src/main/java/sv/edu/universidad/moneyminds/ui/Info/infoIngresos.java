@@ -98,7 +98,7 @@ public class infoIngresos extends Fragment {
             float por = (cantG.get(i)/total)*100;
             pieChart.addPieSlice(new PieModel(catG.get(i), por, color));
         }
-        pieChart.setInnerValueString(total.toString()+"$");
+        pieChart.setInnerValueString(total.toString()+getString(R.string.moneda));
         pieChart.startAnimation();
 
         //----------Generar Lista---------------------

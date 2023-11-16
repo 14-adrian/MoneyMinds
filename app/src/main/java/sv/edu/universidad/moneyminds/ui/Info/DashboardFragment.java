@@ -21,6 +21,7 @@ import java.util.List;
 
 import sv.edu.universidad.moneyminds.AdminDB;
 import sv.edu.universidad.moneyminds.Datos;
+import sv.edu.universidad.moneyminds.R;
 import sv.edu.universidad.moneyminds.databinding.FragmentDashboardBinding;
 import sv.edu.universidad.moneyminds.ui.ViewPagerAdapter;
 
@@ -63,8 +64,8 @@ public class DashboardFragment extends Fragment {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager() );
     }
     private void setUpViewPagerAdapter(){
-        viewPagerAdapter.addFragment(new infoGastos(), "Gastos");
-        viewPagerAdapter.addFragment(new infoIngresos(), "Ingresos");
+        viewPagerAdapter.addFragment(new infoGastos(), getString(R.string.gastos));
+        viewPagerAdapter.addFragment(new infoIngresos(), getString(R.string.ingresos));
         viewPager.setAdapter(viewPagerAdapter);
 
         AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
@@ -103,10 +104,10 @@ public class DashboardFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        Log.d("TAG1", "Posicion: " + tabLayout.getSelectedTabPosition() + " Titulo: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
+                        Log.d("TAG1", "Pos: " + tabLayout.getSelectedTabPosition() + " T: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
                         break;
                     case 1:
-                        Log.d("TAG1", "Posicion: " + tabLayout.getSelectedTabPosition() + " Titulo: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
+                        Log.d("TAG1", "Pos: " + tabLayout.getSelectedTabPosition() + " T: " + viewPagerAdapter.getPageTitle(tabLayout.getSelectedTabPosition()));
                         break;
                     default:
                         break;

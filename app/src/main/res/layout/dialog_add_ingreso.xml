@@ -9,11 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/categoria"
-        android:paddingLeft="10dp"/>
+        android:paddingStart="20dp"/>
     <Spinner
         android:id="@+id/lstCat"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:paddingStart="20dp"
         android:inputType="none"
         app:simpleItems="@array/cat_ingresos"
         />
