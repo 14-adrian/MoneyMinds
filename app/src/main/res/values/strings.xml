@@ -68,4 +68,6 @@
     <string name="moneda">$</string>
     <string name="add_cat_error">An error occurred while entering data</string>
     <string name="eliminar_categorias">Delete Categories</string>
+    <string name="descripcion">"Descripcion: "</string>
+    <string name="desc1">Descripcion</string>
 </resources>

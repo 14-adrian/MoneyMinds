@@ -14,8 +14,8 @@ public class AdminDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE Ingresos (id integer primary key autoincrement, categoria text, cantidad real, fecha text)");
-        db.execSQL("CREATE TABLE Gastos (id integer primary key autoincrement, categoria text, cantidad real, fecha text)");
+        db.execSQL("CREATE TABLE Ingresos (id integer primary key autoincrement, categoria text, cantidad real, fecha text, descripcion text)");
+        db.execSQL("CREATE TABLE Gastos (id integer primary key autoincrement, categoria text, cantidad real, fecha text, descripcion text)");
         db.execSQL("CREATE TABLE CatIngresos (id integer primary key autoincrement, nombre text)");
         db.execSQL("CREATE TABLE CatGastos (id integer primary key autoincrement, nombre text)");
     }
@@ -26,8 +26,8 @@ public class AdminDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Gastos");
         db.execSQL("DROP TABLE IF EXISTS CatIngresos");
         db.execSQL("DROP TABLE IF EXISTS CatGastos");
-        db.execSQL("CREATE TABLE Ingresos (id integer primary key autoincrement, categoria text, cantidad real, fecha text)");
-        db.execSQL("CREATE TABLE Gastos (id integer primary key autoincrement, categoria text, cantidad real, fecha text)");
+        db.execSQL("CREATE TABLE Ingresos (id integer primary key autoincrement, categoria text, cantidad real, fecha text, descripcion text)");
+        db.execSQL("CREATE TABLE Gastos (id integer primary key autoincrement, categoria text, cantidad real, fecha text, descripcion text)");
         db.execSQL("CREATE TABLE CatIngresos (id integer primary key autoincrement, nombre text)");
         db.execSQL("CREATE TABLE CatGastos (id integer primary key autoincrement, nombre text)");
     }

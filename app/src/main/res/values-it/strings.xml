@@ -79,4 +79,6 @@
     <string name="moneda">$</string>
     <string name="add_cat_error">Si è verificato un errore durante l\'immissione dei dati</string>
     <string name="eliminar_categorias">Elimina categorie</string>
+    <string name="descripcion">"Descripcion: "</string>
+    <string name="desc1">Descripcion</string>
 </resources>

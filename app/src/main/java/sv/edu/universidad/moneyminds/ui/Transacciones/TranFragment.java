@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -95,9 +96,9 @@ public class TranFragment extends Fragment {
         int month = ((Datos) getActivity().getApplication()).getMonth();
         if (month == 0){
             final Calendar c = Calendar.getInstance();
-            int mMonth = c.get(Calendar.MONTH);
+            int dMonth = c.get(Calendar.MONTH);
             int mYear = c.get(Calendar.YEAR);// current month
-            ((Datos) getActivity().getApplication()).setMonth(mMonth+1);
+            ((Datos) getActivity().getApplication()).setMonth(dMonth+1);
             ((Datos) getActivity().getApplication()).setYear(mYear);
 
         }
@@ -159,6 +160,7 @@ public class TranFragment extends Fragment {
                 final View  customV = inflater.inflate(R.layout.dialog_add_ingreso, null);
                 Spinner dropdown = customV.findViewById(R.id.lstCat);
                 EditText cantidad = customV.findViewById(R.id.edCantidad);
+                EditText descripcion = customV.findViewById(R.id.edDesc);
                 List<String> datos = new ArrayList<String>();
                 datos.add(getString(R.string.cat_add_in));
                 datos.add(getString(R.string.cat_add_in2));
@@ -179,19 +181,14 @@ public class TranFragment extends Fragment {
                                 String s_cant = cantidad.getText().toString();
                                 String categoria = dropdown.getSelectedItem().toString();
                                 String tdate = ((Datos) getActivity().getApplication()).getValDate();
-                                if(s_cant.isEmpty()){
-                                    Toast.makeText(getActivity(), R.string.add_cat_error ,
-                                            Toast.LENGTH_LONG).show();
-                                    bd.close();
-                                    actualizarTotal();
-                                    closeFAB();
-                                }
-                                else{
+                                String desc = descripcion.getText().toString();
+                                if(s_cant.length()!=0){
                                     Double cant = Double.valueOf(s_cant);
                                     ContentValues registro = new ContentValues();
                                     registro.put("categoria", categoria);
                                     registro.put("cantidad", cant);
                                     registro.put("fecha", tdate);
+                                    registro.put("descripcion", desc);
                                     bd.insert("Ingresos", null, registro);
                                     bd.close();
                                     actualizarTotal();
@@ -199,6 +196,13 @@ public class TranFragment extends Fragment {
                                             Toast.LENGTH_SHORT).show();
                                     closeFAB();
                                 }
+                                else {
+                                    bd.close();
+                                    closeFAB();
+                                    Toast.makeText(getActivity(), R.string.add_cat_error,
+                                            Toast.LENGTH_SHORT).show();
+                                }
+
 
                             }
                         })
@@ -230,6 +234,7 @@ public class TranFragment extends Fragment {
                 Spinner dropdown = customV.findViewById(R.id.lstCat);
                 List<String> datos = new ArrayList<String>();
                 EditText cantidad = customV.findViewById(R.id.edCantidad);
+                EditText descripcion = customV.findViewById(R.id.edDesc);
                 datos.add(getString(R.string.cad_add_gas));
                 datos.add(getString(R.string.cat_add_gas2));
                 while (fila.moveToNext())
@@ -251,28 +256,26 @@ public class TranFragment extends Fragment {
                                 SQLiteDatabase bd = admin.getWritableDatabase();
                                 String s_cant = cantidad.getText().toString();
                                 String categoria = dropdown.getSelectedItem().toString();
-
+                                String desc = descripcion.getText().toString();
                                 String tdate = ((Datos) getActivity().getApplication()).getValDate();
-                                if (s_cant.isEmpty()){
-                                    Toast.makeText(getActivity(), R.string.add_cat_error ,
-                                            Toast.LENGTH_LONG).show();
-                                    bd.close();
-                                    actualizarTotal();
-                                    closeFAB();
-                                }else {
+                                if(s_cant.length()!=0){
                                     Double cant = Double.valueOf(s_cant);
                                     ContentValues registro = new ContentValues();
                                     registro.put("categoria", categoria);
                                     registro.put("cantidad", cant);
                                     registro.put("fecha", tdate);
+                                    registro.put("descripcion", desc);
                                     bd.insert("Gastos", null, registro);
                                     bd.close();
-                                    actualizarTotal();
-                                    Toast.makeText(getActivity(), R.string.toastGastoText ,
-                                            Toast.LENGTH_SHORT).show();
                                     closeFAB();
+                                    actualizarTotal();
                                 }
-
+                                else {
+                                    bd.close();
+                                    closeFAB();
+                                    Toast.makeText(getActivity(), R.string.add_cat_error,
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -289,13 +292,16 @@ public class TranFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 int t_id = (int) lista.getAdapter().getItem(pos);
-                String t_Cat = getString(R.string.categoria_elim_set), t_Cant = getString(R.string.cantidad_elim_set), t_fec = getString(R.string.fecha_elim_set);
-                String d_Cat = "", d_Cant = "", d_fec;
+                String t_Cat = getString(R.string.categoria_elim_set),
+                        t_Cant = getString(R.string.cantidad_elim_set),
+                        t_fec = getString(R.string.fecha_elim_set),
+                        t_desc = getString(R.string.descripcion);
+                String d_Cat = "", d_Cant = "", d_fec, d_desc="";
                 AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
                 SQLiteDatabase bd = admin.getWritableDatabase();
                 int mMonth = ((Datos) getActivity().getApplication()).getMonth();
                 int mYear = ((Datos) getActivity().getApplication()).getYear();
-                Cursor filaPerG = bd.rawQuery("SELECT categoria, cantidad, fecha " +
+                Cursor filaPerG = bd.rawQuery("SELECT categoria, cantidad, fecha, descripcion " +
                         "FROM Gastos " +
                         "WHERE strftime('%m', fecha) = '"+mMonth+"'" +
                         " AND strftime('%Y', fecha) = '"+mYear+"'" +
@@ -306,6 +312,7 @@ public class TranFragment extends Fragment {
                     d_Cat = filaPerG.getString(0);
                     d_Cant = filaPerG.getString(1);
                     d_fec = filaPerG.getString(2);
+                    d_desc = filaPerG.getString(3);
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                     // Get the layout inflater
                     LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -313,10 +320,12 @@ public class TranFragment extends Fragment {
                     TextView v_cat = customV.findViewById(R.id.catElim);
                     TextView v_cant = customV.findViewById(R.id.cantElim);
                     TextView v_fec = customV.findViewById(R.id.fecElim);
+                    TextView v_desc = customV.findViewById(R.id.fecDesc);
 
                     v_cat.setText(t_Cat+d_Cat);
                     v_cant.setText(t_Cant+d_Cant+"$");
                     v_fec.setText(t_fec+d_fec);
+                    v_desc.setText(t_desc + d_desc);
 
                     builder.setTitle(R.string.eliminar_gasto);
                     builder.setView(customV)
@@ -349,13 +358,16 @@ public class TranFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 int t_id = (int) lista2.getAdapter().getItem(pos);
-                String t_Cat = getString(R.string.categoria_elim_set), t_Cant = getString(R.string.cantidad_elim_set), t_fec = getString(R.string.fecha_elim_set);
-                String d_Cat = "", d_Cant = "", d_fec;
+                String t_Cat = getString(R.string.categoria_elim_set),
+                        t_Cant = getString(R.string.cantidad_elim_set),
+                        t_fec = getString(R.string.fecha_elim_set),
+                        t_desc = getString(R.string.descripcion);
+                String d_Cat = "", d_Cant = "", d_fec, d_desc="";
                 AdminDB admin = new AdminDB(getActivity(), "DBmoney", null, 1);
                 SQLiteDatabase bd = admin.getWritableDatabase();
                 int mMonth = ((Datos) getActivity().getApplication()).getMonth();
                 int mYear = ((Datos) getActivity().getApplication()).getYear();
-                Cursor filaPerG = bd.rawQuery("SELECT categoria, cantidad, fecha " +
+                Cursor filaPerG = bd.rawQuery("SELECT categoria, cantidad, fecha, descripcion " +
                         "FROM Ingresos " +
                         "WHERE strftime('%m', fecha) = '"+mMonth+"'" +
                         " AND strftime('%Y', fecha) = '"+mYear+"'" +
@@ -366,6 +378,8 @@ public class TranFragment extends Fragment {
                     d_Cat = filaPerG.getString(0);
                     d_Cant = filaPerG.getString(1);
                     d_fec = filaPerG.getString(2);
+                    d_desc = filaPerG.getString(3);
+
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                     // Get the layout inflater
                     LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -373,10 +387,12 @@ public class TranFragment extends Fragment {
                     TextView v_cat = customV.findViewById(R.id.catElim);
                     TextView v_cant = customV.findViewById(R.id.cantElim);
                     TextView v_fec = customV.findViewById(R.id.fecElim);
+                    TextView v_desc = customV.findViewById(R.id.fecDesc);
 
                     v_cat.setText(t_Cat+d_Cat);
                     v_cant.setText(t_Cant+d_Cant+"$");
                     v_fec.setText(t_fec+d_fec);
+                    v_desc.setText(t_desc + d_desc);
 
                     builder.setTitle(R.string.eliminar_ingreso);
                     builder.setView(customV)
@@ -425,6 +441,8 @@ public class TranFragment extends Fragment {
         int mMonth = ((Datos) getActivity().getApplication()).getMonth();
         int mYear = ((Datos) getActivity().getApplication()).getYear();
 
+        Log.d("TAG69", String.valueOf(mMonth) + "----" + String.valueOf(mYear));
+
 
         //----Total General Ingreso--------------------------------------
         Cursor fila = bd.rawQuery("SELECT cantidad " +
@@ -469,8 +487,8 @@ public class TranFragment extends Fragment {
         Double totalPer = ingresos - gastos;
         txtTotal.setText(String.format("%.2f", total)+getString(R.string.moneda));
         txtTotalPer.setText(String.format("%.2f", totalPer)+getString(R.string.moneda));
-        txtIngreso.setText(String.format("%.2f", ingresos)+getString(R.string.moneda));
-        txtGasto.setText(String.format("%.2f", gastos)+getString(R.string.moneda));
+        txtIngreso.setText(String.format("%.2f", ingP)+getString(R.string.moneda));
+        txtGasto.setText(String.format("%.2f", gasP)+getString(R.string.moneda));
 
         //------------------Asignar Fecha------------------
         today = ((Datos) getActivity().getApplication()).getToday();
@@ -587,12 +605,13 @@ public class TranFragment extends Fragment {
                                     (((Datos) getActivity().getApplication()).getMonthForInt(monthOfYear+1).substring(0, 3).toUpperCase() +
                                             "/" + year);
                             String tDate = (year + "-" +
-                                    String.format("%02d", monthOfYear) +
-                                    "-" + String.format("%02d", dayOfMonth+1));
+                                    String.format("%02d", monthOfYear+1) +
+                                    "-" + String.format("%02d", dayOfMonth));
                             ((Datos) getActivity().getApplication()).setValDate(tDate);
                             ((Datos) getActivity().getApplication()).setMonth(monthOfYear+1);
                             ((Datos) getActivity().getApplication()).setYear(year);
                             ((Datos) getActivity().getApplication()).setToday(formatDate);
+
                             actualizarTotal();
                         }
                     }, mYear, mMonth, mDay);

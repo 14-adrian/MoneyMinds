@@ -24,7 +24,7 @@
     <string name="ok">Aceptar</string>
     <string name="cancel">Cancelar</string>
     <string name="categoria">Categoria</string>
-    <string name="cantidad">Cantiddad</string>
+    <string name="cantidad">Cantidad</string>
     <string name="agregar_categoria">Agregar Categoria</string>
     <string name="nombre_categoria">Nombre Categoria</string>
     <string name="toastIngresoText">Ingreso Agregado con exito</string>
@@ -65,4 +65,6 @@
     <string name="moneda">$</string>
     <string name="add_cat_error">Ocurrio un error al ingresar los datos</string>
     <string name="eliminar_categorias">Eliminar Categorias</string>
+    <string name="descripcion">"Descripcion: "</string>
+    <string name="desc1">Descripcion</string>
 </resources>

@@ -34,4 +34,18 @@
             android:inputType="numberDecimal"
             android:hint="@string/cantidad" />
     </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:startIconDrawable="@drawable/baseline_play_arrow_24"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/desc1" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
